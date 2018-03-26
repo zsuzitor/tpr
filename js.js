@@ -3,11 +3,15 @@
 var column=0;//4
 var row=4;
 
-var matrix=[][];
+var matrix=[];
 //TODO кнопки: очистить
 //в ячейке еще 2 поля
 //работа с файлами
 //матрица
+
+//TODO
+//добавление строки не работает
+//добавление столбца не правильно
 
 class one_block_matrix {
  constructor(price_,count_,count_2){
@@ -36,7 +40,24 @@ add_column_f();
 }
 
 function save_matr(){
+for(var i=0;i<row;++i){
+	for(var i2=0;i2<column;++i2){
+		//TODO заполнять и остальные поля
+var div=document.getElementById("one_input_id"+i+"_"+i2);
+matrix[i][i2]=div.value;
 
+	}
+}	
+}
+function load_matr(){
+for(var i=0;i<row;++i){
+	for(var i2=0;i2<column;++i2){
+		//TODO заполнять и остальные поля
+var div=document.getElementById("one_input_id"+i+"_"+i2);
+div.value=matrix[i][i2];
+
+	}
+}
 
 
 }
@@ -46,7 +67,7 @@ function add_row_f(){
 for(var i=0;i<column;++i){
 	var div=document.getElementById("one_column_id"+i);
 div.innerHTML+="<input class='input_block' id='one_input_id"+row+"_"+i+"' type='text' type='number'>";
-
+matrix[row][i]=new one_block_matrix(null,null,null);;
 }
 
 row++;
@@ -59,6 +80,7 @@ res+="<div class='div_inline_block div_one_colum' id='one_column_id"+column+"''>
 
 for(var i=0;i<row;++i){
 	res+="<input class='input_block' id='one_input_id"+i+"_"+column+"' type='text' type='number'>";
+	matrix[i]=[];
 	matrix[i][column]=new one_block_matrix(null,null,null);
 }
 
@@ -95,10 +117,14 @@ for(var i=0;i<column;++i){
 
 }
 function add_column(){
+	save_matr();
 	add_column_f();
+	load_matr();
 }
 function add_row(){
+	save_matr();
 	add_row_f();
+	load_matr();
 
 }
 
@@ -120,7 +146,7 @@ document.addEventListener("DOMContentLoaded", page_start);
 
 
 //править
-
+/*
 function loadFile(files) {
 				var file = files[0];
 				if(file) {
@@ -227,3 +253,4 @@ function loadFile(files) {
 				pom.setAttribute('download', 'example.txt');
 				pom.click();
 			}
+			*/
