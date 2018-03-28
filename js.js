@@ -38,14 +38,32 @@ add_column_f();
 
 
 }
+function set_matrix_cell(row_,column_,price_,count_,count2_){
+	if(price_===null){
+		var div=document.getElementById("one_input_id"+row_+"_"+column_);
+matrix[row_][column_].price=div.value===""?null:div.value;
+	}
+	//TODO
+	matrix[row_][column_].count=+count_;
+	matrix[row_][column_].count2=+count2_;
 
+}
+//заносит сразу в UI
+function read_matrix_cell(row_,column_,price_,count_,count2_){
+
+var div=document.getElementById("one_input_id"+row_+"_"+column_);
+div.value=matrix[row_][column_].price;
+//TODO по аналогии абратно
+//matrix[row_][column_].count=count_;
+	//matrix[row_][column_].count2=count2_;
+
+}
 function save_matr(){
 for(var i=0;i<row;++i){
 	for(var i2=0;i2<column;++i2){
 		//TODO заполнять и остальные поля
-var div=document.getElementById("one_input_id"+i+"_"+i2);
-matrix[i][i2]=div.value;
 
+set_matrix_cell(i,i2,null,null,null);
 	}
 }	
 }
@@ -53,8 +71,7 @@ function load_matr(){
 for(var i=0;i<row;++i){
 	for(var i2=0;i2<column;++i2){
 		//TODO заполнять и остальные поля
-var div=document.getElementById("one_input_id"+i+"_"+i2);
-div.value=matrix[i][i2];
+read_matrix_cell(i,i2,null,null,null);
 
 	}
 }
@@ -67,7 +84,9 @@ function add_row_f(){
 for(var i=0;i<column;++i){
 	var div=document.getElementById("one_column_id"+i);
 div.innerHTML+="<input class='input_block' id='one_input_id"+row+"_"+i+"' type='text' type='number'>";
-matrix[row][i]=new one_block_matrix(null,null,null);;
+if(matrix[row]==undefined)
+	matrix[row]=[];
+matrix[row][i]=new one_block_matrix(null,null,null);
 }
 
 row++;
@@ -80,6 +99,7 @@ res+="<div class='div_inline_block div_one_colum' id='one_column_id"+column+"''>
 
 for(var i=0;i<row;++i){
 	res+="<input class='input_block' id='one_input_id"+i+"_"+column+"' type='text' type='number'>";
+	if(matrix[i]==undefined)
 	matrix[i]=[];
 	matrix[i][column]=new one_block_matrix(null,null,null);
 }
@@ -146,7 +166,7 @@ document.addEventListener("DOMContentLoaded", page_start);
 
 
 //править
-/*
+
 function loadFile(files) {
 				var file = files[0];
 				if(file) {
@@ -154,49 +174,15 @@ function loadFile(files) {
 					reader.onload = function (e) {  
 						var text = e.target.result;
 						var arr = text.split(',');
-						document.getElementById('method').selectedIndex = arr[0];
-						addTable(arr[1],arr[2]);
-						changeInput();
+
+						
 						for(var i=0; i<arr[1]; i++) {
 							for(var j=0; j<arr[2]; j++) {
-								document.getElementById('elem_'+i+'_'+j+'').value=arr[i*arr[2]+j+3];
+								
 							}
 						}
-						var select=document.getElementById('method');
-						var value = select.options[select.selectedIndex].value;
-						switch (value) {
-							case 'minimax':
-								break;
-							case 'bayes_laplas':
-								for(var i=0; i<arr[2]; i++) {
-									document.getElementById('q_'+(i+1)).value=arr[arr[1]*arr[2]+3+i];
-								}
-								break;
-							case 'sevidg':
-								break;
-							case 'gurvits':
-								document.getElementById('c').value=arr[arr[1]*arr[2]+3];
-								break;
-							case 'hodg_lemon':
-								document.getElementById('v').value=arr[arr[1]*arr[2]+3];
-								for(var i=0; i<arr[2]; i++) {
-									document.getElementById('q_'+(i+1)).value=arr[arr[1]*arr[2]+4+i];
-								}
-								break;
-							case 'germeyer':
-								document.getElementById('a').value=arr[arr[1]*arr[2]+3];
-								for(var i=0; i<arr[2]; i++) {
-									document.getElementById('q_'+(i+1)).value=arr[arr[1]*arr[2]+4+i];
-								}
-								break;
-							case 'proizvedenie':
-								document.getElementById('a').value=arr[arr[1]*arr[2]+3];
-								break;
-							case 'bayes':
-								break;
-							default:
-								alert('Unknown method');
-						}
+						
+						
 					};
 					reader.readAsText(file);
 				}
@@ -204,53 +190,17 @@ function loadFile(files) {
 
 
 			function saveFile() {
-				var matrix=getMatrix();
-				var select=document.getElementById('method');
-				var value = select.options[select.selectedIndex].value;
-				var str=String(document.getElementById('method').selectedIndex);
-				switch (value) {
-					case 'minimax':
-						var str=str[0]+','+String(matrix.length)+','+String(matrix[0].length)+','+matrix.toString();
-						break;
-					case 'bayes_laplas':
-						var q = [];
-						for(var i=0; i<matrix[0].length; i++) {
-							q[i]=document.getElementById('q_'+(i+1)).value;
-						}
-						var str=str[0]+','+String(matrix.length)+','+String(matrix[0].length)+','+matrix.toString()+','+q.toString();
-						break;
-					case 'sevidg':
-						var str=str[0]+','+String(matrix.length)+','+String(matrix[0].length)+','+matrix.toString();
-						break;
-					case 'gurvits':
-						var str=str[0]+','+String(matrix.length)+','+String(matrix[0].length)+','+matrix.toString()+','+document.getElementById('c').value;
-						break;
-					case 'hodg_lemon':
-						var q = [];
-						for(var i=0; i<matrix[0].length; i++) {
-							q[i]=document.getElementById('q_'+(i+1)).value;
-						}
-						var str=str[0]+','+String(matrix.length)+','+String(matrix[0].length)+','+matrix.toString()+','+document.getElementById('v').value+','+q.toString();
-						break;
-					case 'germeyer':
-						var q = [];
-						for(var i=0; i<matrix[0].length; i++) {
-							q[i]=document.getElementById('q_'+(i+1)).value;
-						}
-						var str=str[0]+','+String(matrix.length)+','+String(matrix[0].length)+','+matrix.toString()+','+document.getElementById('a').value+','+q.toString();
-						break;
-					case 'proizvedenie':
-						var str=str[0]+','+String(matrix.length)+','+String(matrix[0].length)+','+matrix.toString()+','+document.getElementById('a').value;
-						break;
-					case 'bayes':
-						var str=str[0]+','+String(matrix.length)+','+String(matrix[0].length)+','+matrix.toString();
-						break;
-					default:
-						alert('Unknown method');
-				}
+				//3 пункта 
+				//1- размерность, сама матрица
+				//без размерности тк /2
+				//2- крайние куски
+				//3- потенциалы
+
+				
+				//сохранение файла
 				var pom=document.createElement('a');
 				pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(str));
 				pom.setAttribute('download', 'example.txt');
 				pom.click();
 			}
-			*/
+		
