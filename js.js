@@ -83,7 +83,7 @@ read_matrix_cell(i,i2,null,null,null);
 function add_row_f(){
 for(var i=0;i<column;++i){
 	var div=document.getElementById("one_column_id"+i);
-div.innerHTML+="<input class='input_block' id='one_input_id"+row+"_"+i+"' type='text' type='number'>";
+div.innerHTML+=add_one_cell_ui(row,i);//"<input class='input_block' id='one_input_id"+row+"_"+i+"' type='text' type='number'>";
 if(matrix[row]==undefined)
 	matrix[row]=[];
 matrix[row][i]=new one_block_matrix(null,null,null);
@@ -92,13 +92,24 @@ matrix[row][i]=new one_block_matrix(null,null,null);
 row++;
 }
 
+function add_one_cell_ui(row_,column_){
+var res="<div  class='input_block'>";
+res+="<label class='div_inline_block one_output' id='one_output_1_id"+row_+"_"+column_+"'></label>";
+res+="<label  class='div_inline_block one_output' id='one_output_2_id"+row_+"_"+column_+"'></label>";
+res+="<div class='one_input_div'>";
+res+="<input  id='one_input_id"+row_+"_"+column_+"' type='number' type='number'>";
+res+="</div></div>";
+//"<input class='input_block' id='one_input_id"+i+"_"+column+"' type='text' type='number'>";
+return res;
+}
+
 function add_column_f(){
 var res="";
 var main_div=document.getElementById("main_div_tabl");
 res+="<div class='div_inline_block div_one_colum' id='one_column_id"+column+"''>";
 
 for(var i=0;i<row;++i){
-	res+="<input class='input_block' id='one_input_id"+i+"_"+column+"' type='text' type='number'>";
+	res+=add_one_cell_ui(i,column);
 	if(matrix[i]==undefined)
 	matrix[i]=[];
 	matrix[i][column]=new one_block_matrix(null,null,null);

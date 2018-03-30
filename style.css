@@ -4,7 +4,7 @@ textarea {
     /*max-width: 280px;*/
     width:100%;
     height: 100%;
-    border:2px solid black;
+   box-sizing: border-box;
 }
 .link_standart_for_div {
     display: block; /* Ссылка как блочный элемент */
@@ -27,7 +27,7 @@ ul {
     padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
 }
 
-div.div_inline_block {
+.div_inline_block {
     display: inline-block;
     vertical-align: top;
 }
@@ -39,9 +39,22 @@ margin-left: 3px;
 }
 
 
-.input_block{
+div.input_block{
 box-sizing: border-box;
 margin-top: 3px;
+ border:2px solid black;
+ height: 50px;
+ width:50px;
+
+}
+.one_output{
+	height: 50%;
+	width: 50%;
+	
+}
+div.one_input_div{
+	height: 50%;
+	
 
 }
 /*TODO убрать или поменять*/
@@ -49,3 +62,4 @@ margin-top: 3px;
 	margin-top: 400px;
 	margin-left: 400px;
 }
+
