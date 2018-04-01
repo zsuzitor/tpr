@@ -4,6 +4,10 @@ var column=0;//4
 var row=4;
 
 var matrix=[];
+var matrix_a_row=[];//края
+var matrix_a_column=[];
+var matrix_b_row=[];//потенциалы
+var matrix_b_column=[];
 //TODO кнопки: очистить
 //в ячейке еще 2 поля
 //работа с файлами
@@ -29,12 +33,19 @@ function page_start(){
 	//console.log("sdf");
 	
 //main_div.innerHTML="";
-var res="";
+//var res="";
 for(var i=0;i<4;++i){
 add_column_f();
 
 }
+function reload_ui{
+	var div=document.getElementById("main_div_tabl");
+	div.innerHTML="";
+for(var i=0;i<column;++i){
+add_column_f();
 
+}
+}
 
 
 }
@@ -93,7 +104,7 @@ row++;
 }
 
 function add_one_cell_ui(row_,column_){
-var res="<div  class='input_block'>";
+var res="<div  class='input_block' id='input_block_id"+row_+"_"+column_+"'>";
 res+="<label class='div_inline_block one_output' id='one_output_1_id"+row_+"_"+column_+"'></label>";
 res+="<label  class='div_inline_block one_output' id='one_output_2_id"+row_+"_"+column_+"'></label>";
 res+="<div class='one_input_div'>";
@@ -126,7 +137,7 @@ function del_row(){
 	row--;
 for(var i=0;i<column;++i){
 	
-	var div=document.getElementById("one_input_id"+row+"_"+i);
+	var div=document.getElementById("input_block_id"+row+"_"+i);
 div.remove();
 matrix.splice(row,1);
 
@@ -166,13 +177,6 @@ function add_row(){
 
 
 
-
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", page_start);
 
 
@@ -185,15 +189,33 @@ function loadFile(files) {
 					reader.onload = function (e) {  
 						var text = e.target.result;
 						var arr = text.split(',');
-
-						
-						for(var i=0; i<arr[1]; i++) {
-							for(var j=0; j<arr[2]; j++) {
-								
+						row=arr[0];
+						column=arr[1];
+						arr.splice(0,2);
+						var num=0;
+						for(var i=0; i<row; i++) {
+							for(var j=0; j<column; j++) {
+								num= i*j+j];
+								matrix[i][j]=+arr[num];
 							}
 						}
-						
-						
+						num++;
+						for(var i=0;i<row;++i,++num){
+matrix_a_row[i]=+ arr[num];
+						}
+						for(var i=0;i<column;++i,++num){
+matrix_a_column[i]=+ arr[num];
+						}
+						for(var i=0;i<row&&num<arr.length;++i,++num){
+matrix_b_row[i]=+ arr[num];
+						}
+						for(var i=0;i<column&&num<arr.length;++i,++num){
+matrix_b_column[i]=+ arr[num];
+						}
+						//ОТРИСОВАТЬ UI
+						reload_ui();
+						load_matr();
+						//matrix[i].splice(column,1);
 					};
 					reader.readAsText(file);
 				}
@@ -207,7 +229,37 @@ function loadFile(files) {
 				//2- крайние куски
 				//3- потенциалы
 
+//размерность ->матрица->границы->потенциалы
 				
+				var str=""+row+","+column+",";
+
+				//var num=0;
+				for(var i=0; i<row; i++) {
+							for(var j=0; j<column; j++) {
+								//num= i*j+j];
+								str+=matrix[i][j]+",";
+							}
+						}
+for(var i=0;i<matrix_a_row.length;++i){
+	str+=matrix_a_row[i]+",";
+
+						}
+						for(var i=0;i<matrix_a_column.length;++i){
+	str+=matrix_a_column[i]+",";
+
+						}
+						if(matrix_b_row.length>0&&matrix_b_column.length>0){
+							for(var i=0;i<row;++i){
+								str+=matrix_b_row[i]+",";
+
+						}
+						for(var i=0;i<column;++i){
+							str+=matrix_b_column[i]+",";
+
+						}
+						}
+						str[str.length-1]="";
+
 				//сохранение файла
 				var pom=document.createElement('a');
 				pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(str));
