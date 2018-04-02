@@ -1,4 +1,7 @@
-
+//северо западного угла
+//циклическая перестановка
+//метод наименьшей стоимости
+//метод потенциалов
 
 var column=0;//4
 var row=4;
@@ -10,13 +13,10 @@ var matrix_a_column=[];
 var matrix_b_row=[];//потенциалы
 var matrix_b_column=[];
 //TODO кнопки: очистить
-//в ячейке еще 2 поля
-//работа с файлами
-//матрица
+
 
 //TODO
-//добавление строки не работает
-//добавление столбца не правильно
+
 
 class one_block_matrix {
  constructor(price_,count_,count_2){
@@ -26,19 +26,17 @@ this.count2=count_2;
 
  }
 
-//var a=()=>{}
+
 }
 
-
+//старт страницы и начало работы
 function page_start(){
-	//console.log("sdf");
-	
-//main_div.innerHTML="";
-//var res="";
+
 for(var i=0;i<4;++i){
 add_column_f();
 
 }
+//перестройка схемы ui()
 function reload_ui{
 	var div=document.getElementById("main_div_tabl");
 	div.innerHTML="";
@@ -50,6 +48,7 @@ add_column_f();
 
 
 }
+//из существующей ячейке значения заносятся в js
 function set_matrix_cell(row_,column_,price_,count_,count2_){
 	if(price_===null){
 		var div=document.getElementById("one_input_id"+row_+"_"+column_);
@@ -60,7 +59,7 @@ matrix[row_][column_].price=div.value===""?null:div.value;
 	matrix[row_][column_].count2=+count2_;
 
 }
-//заносит сразу в UI
+//заносит цену сразу в UI в созданный див
 function read_matrix_cell(row_,column_,price_,count_,count2_){
 
 var div=document.getElementById("one_input_id"+row_+"_"+column_);
@@ -70,6 +69,7 @@ div.value=matrix[row_][column_].price;
 	//matrix[row_][column_].count2=count2_;
 
 }
+//внесение данных из ui в js
 function save_matr(){
 for(var i=0;i<row;++i){
 	for(var i2=0;i2<column;++i2){
@@ -79,6 +79,7 @@ set_matrix_cell(i,i2,null,null,null);
 	}
 }	
 }
+//добавление в созданную ячейку значений в ui
 function load_matr(){
 for(var i=0;i<row;++i){
 	for(var i2=0;i2<column;++i2){
@@ -91,7 +92,7 @@ read_matrix_cell(i,i2,null,null,null);
 
 }
 
-
+//добавить строку
 function add_row_f(){
 for(var i=0;i<column;++i){
 	var div=document.getElementById("one_column_id"+i);
@@ -103,7 +104,7 @@ matrix[row][i]=new one_block_matrix(null,null,null);
 
 row++;
 }
-
+//отрисовка 1 ячейки с данными
 function add_one_cell_ui(row_,column_){
 var res="<div  class='input_block' id='input_block_id"+row_+"_"+column_+"'>";
 res+="<label class='div_inline_block one_output' id='one_output_1_id"+row_+"_"+column_+"'></label>";
@@ -115,6 +116,7 @@ res+="</div></div>";
 return res;
 }
 
+//добавить столбец
 function add_column_f(){
 var res="";
 var main_div=document.getElementById("main_div_tabl");
@@ -133,7 +135,7 @@ column++;
 main_div.innerHTML+=res;
 
 }
-
+//кнопка удалить строку
 function del_row(){
 	row--;
 for(var i=0;i<column;++i){
@@ -147,7 +149,7 @@ matrix.splice(row,1);
 
 }
 
-
+//кнопка удалить столбец
 function del_column(){
 	var div=document.getElementById("one_column_id"+(column-1));
 	div.remove();
@@ -159,36 +161,124 @@ for(var i=0;i<column;++i){
 
 
 }
+//кнопка добавить столбец
 function add_column(){
 	save_matr();
 	add_column_f();
 	load_matr();
 }
+//кнопка добавить строку
 function add_row(){
 	save_matr();
 	add_row_f();
 	load_matr();
 
 }
+//очистить все кроме цены в коде
+function not_full_clear_matrix(){
+	for(var i=0;i<row;++i){
+	for(var i2=0;i2<column;++i2){
+		//TODO заполнять и остальные поля
+set_matrix_cell(i,i2,matrix[i][i2].price,null,null);
 
-//functions подсчета
+	}
+}
+}
+//functions подсчета северозаподного угла
 function deg{
-	//TODO copy
-var mass_row=matrix_a_row.copy;
-var mass_column=matrix_a_column.copy;
+	
+var mass_row=matrix_a_row.slice(0,matrix_a_row.length-1);
+var mass_column=matrix_a_column.slice(0,matrix_a_column.length-1);
+var i2=0;
+var tmp=0;
+ not_full_clear_matrix();
 	for(var i=0;i<column;++i){
-		var i2=0;
+		
 		//for(var i2=0;i2<column;++i2){
-			var tmp=0;
-			if(matrix_a_row[i]>matrix_a_column[i2])
-		tmp=matrix_a_column[i2];
+			while(true){
+				if(mass_row[i]>mass_column[i2]){
+				tmp=mass_column[i2];
+				
+			}
+			else{
+				tmp=mass_row[i];
+			}
+			mass_row[i]-=-tmp;
+				mass_column[i2]-=tmp;
+				matrix[i][i2].count=tmp;
+if(mass_row[i]!=0){
+i2++;
+}
+else
+break;
+			}
 
-	matrix[i][i2].count=tmp;
+	set_matrix_cell(i,i2,matrix[i][i2].price,tmp,null);
 
 	//}
 	}
 }
 
+
+//метод наименьше стоимости
+function small_price(){
+var mass_row=matrix_a_row.slice(0,matrix_a_row.length-1);
+var mass_column=matrix_a_column.slice(0,matrix_a_column.length-1);
+var mass_price_=[];
+var mass_price=[];
+for(var i=0;i<row;++i){
+	for(var i2=0;i2<column;++i2){
+
+		mass_price_.push(matrix[i][i2]);
+	}
+}
+for(var i=0;i<mass_price_.length-1;++i){
+if(mass_price_.count(mass_price_[i])>1){
+//mass_price.splice(i,1);
+if(mass_price.count(mass_price_[i])===0){
+	mass_price.push(mass_price_[i]);
+}
+}
+else{
+mass_price.push(mass_price_[i]);
+}
+
+}
+mass_price.sort((a, b) =>{
+  if (a > b) return 1;
+  if (a < b) return -1;
+});
+
+
+for(var item=0;item<mass_price.length;++item){
+	for(var i=0;i<row;++i){
+	for(var i2=0;i2<column;++i2){
+		if(matrix[i][i2].price===mass_price[item]){
+//TODO
+var tmp=0;
+if(mass_row[i]!==0&&mass_column[i2]!==0)
+if(mass_row[i]>mass_column[i2]){
+				tmp=mass_column[i2];
+				
+			}
+			else{
+				tmp=mass_row[i];
+			}
+			mass_row[i]-=-tmp;
+				mass_column[i2]-=tmp;
+				matrix[i][i2].count=tmp;
+		}
+		
+		
+	
+
+	}
+}
+}
+
+
+
+}
 
 
 
