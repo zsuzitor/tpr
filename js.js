@@ -3,6 +3,7 @@
 var column=0;//4
 var row=4;
 
+
 var matrix=[];
 var matrix_a_row=[];//края
 var matrix_a_column=[];
