@@ -170,7 +170,29 @@ function add_row(){
 
 }
 
+//functions подсчета
+function deg{
+	//TODO copy
+var mass_row=matrix_a_row.copy;
+var mass_column=matrix_a_column.copy;
+	for(var i=0;i<column;++i){
+		var i2=0;
+		//for(var i2=0;i2<column;++i2){
+			var tmp=0;
+			if(matrix_a_row[i]>matrix_a_column[i2])
+		tmp=matrix_a_column[i2];
 
+	matrix[i][i2].count=tmp;
+
+	//}
+	}
+}
+
+
+
+
+
+//
 
 
 
