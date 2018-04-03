@@ -62,4 +62,8 @@ div.one_input_div{
 	margin-top: 400px;
 	margin-left: 400px;
 }
+.hr_rotate{
+    /*TODO transform*/
+    transform:rotate(90deg);
+}
 
