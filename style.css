@@ -59,11 +59,19 @@ div.one_input_div{
 }
 /*TODO убрать или поменять*/
 #main_div_tabl{
-	margin-top: 400px;
-	margin-left: 400px;
+	
 }
 .hr_rotate{
     /*TODO transform*/
-    transform:rotate(90deg);
+    /*transform:rotate(90deg);*/
+    /*position: absolute;*/
+    /*TODO сейчас при увеличении не будет меняться*/
+    height:  300px;
 }
-
+div.main_div{
+    margin-top: 400px;
+    margin-left: 400px;
+}
+div.input_block_down{
+    margin-left: 3px;
+}
