@@ -479,49 +479,16 @@ load_matr();
 function small_price(){
 	var mass_row=matrix_a_row.slice(0,matrix_a_row.length);
 	var mass_column=matrix_a_column.slice(0,matrix_a_column.length);
-	var mass_price_=[];
-	var mass_price=[];
+	
+	
 	reload_ui(true);
 	not_full_clear_matrix();
-	for(var i=0;i<row;++i){
-		for(var i2=0;i2<column;++i2){
+	var mass_price=mass_price_matrix(matrix,row,column);
 
-			mass_price_.push(matrix[i][i2].price);
-		}
-	}
-	/*
-	for(var i=0;i<mass_price_.length-1;++i){
-		if(mass_price_.count(mass_price_[i])>1){
-//mass_price.splice(i,1);
-if(mass_price.count(mass_price_[i])===0){
-	mass_price.push(mass_price_[i]);
-}
-}
-else{
-	mass_price.push(mass_price_[i]);
-}
-
-}*/
-mass_price_.sort((a, b) =>{
-	if (a > b) return 1;
-	if (a < b) return -1;
-});
-
-for(var i=0;i<mass_price_.length;++i){
-	if(i+1<mass_price_.length){
-		if(mass_price_[i]!==mass_price_[i+1])
-			mass_price.push(mass_price_[i])
-	}
-	else{
-		if(mass_price[mass_price.length-1]!==mass_price_[i])
-			mass_price.push(mass_price_[i])
-	}
-}
-
-for(var item=0;item<mass_price.length;++item){
-	for(var i=0;i<row;++i){
-		for(var i2=0;i2<column;++i2){
-			if(matrix[i][i2].price===mass_price[item]){
+	for(var item=0;item<mass_price.length;++item){
+		for(var i=0;i<row;++i){
+			for(var i2=0;i2<column;++i2){
+				if(matrix[i][i2].price===mass_price[item]){
 //TODO
 var tmp=0;
 if(mass_row[i2]!==0&&mass_column[i]!==0)
@@ -547,7 +514,33 @@ if(mass_row[i2]!==0&&mass_column[i]!==0)
 load_matr();
 
 }
+function mass_price_matrix(matrix,row,column){
+	var mass_price_=[];
+	var mass_price=[];
+	for(var i=0;i<row;++i){
+		for(var i2=0;i2<column;++i2){
 
+			mass_price_.push(matrix[i][i2].price);
+		}
+	}
+	
+	mass_price_.sort((a, b) =>{
+		if (a > b) return 1;
+		if (a < b) return -1;
+	});
+
+	for(var i=0;i<mass_price_.length;++i){
+		if(i+1<mass_price_.length){
+			if(mass_price_[i]!==mass_price_[i+1])
+				mass_price.push(mass_price_[i])
+		}
+		else{
+			if(mass_price[mass_price.length-1]!==mass_price_[i])
+				mass_price.push(mass_price_[i])
+		}
+	}
+	return mass_price;
+}
 
 
 //метод потенциалов
@@ -610,9 +603,78 @@ if(not_good_method){
 
 }
 
+//--сначала квадраты идут по строке/столбцу
+//потом прямоугольники 2/3 2/4... 3/2 3/3
+
+
+//делаем прямоугольник и смещаем по строке и так для каждой строки
+//после того как дошел до конца увеличиваем 1 грань и другую =1 и заного
+
+
+
+//для прямоугольника:
+//отсортировать ячейки по стоимости и распределить груз
+function while_method(){
+	//one_block_matrix.Z_matr
+
+	not_full_clear_matrix();
+	reload_ui(true);
+	small_price();
+
+	var end=false;
+	var matrix_old=matrix.slice();
+	var matrix_new=matrix.slice();
+
+	while(!end){
+		var width=1;
+		var height =1;
+var rov_=0;//начало обрабатываемого прямоугольника
+var col_=0;//начало обрабатываемого прямоугольника
+
+
+
+
+}
+//row col координаты начала
+function sort_one_rectangle(matrix,rov_,col_,width,height){
+	var all_count=matrix[row_][col_].count+matrix[row_][width-1].count+matrix[height-1][col_].count+matrix[height-1][width-1].count!=0;
+	if(all_count>0){
+//
+var matr=[];
+for(var i=0;i<2){
+
+	matr[i]=[];
+
+}
+
+matr[0].push(matrix[row_][col_])
+matr[0].push(matrix[row_][width-1])
+matr[1].push(matrix[height-1][col_])
+matr[1].push(matrix[height-1][width-1])
+var mass_price=mass_price_matrix(matr,2,2);
+//в квадрате смещать или горизонтально или вертикально параллельно
+
 
 
 //
+
+}
+//matrix[row_][col_]
+
+}//
+
+}
+
+//
+function Z_matr(matrix){
+	var res=0;
+	for(var i=0;i<row;++i){
+		for(var i2=0;i2<column;++i2){
+			res+=matrix[i][i2].price*matrix[i][i2].count;
+		}
+	}
+	return res;
+}
 
 
 
