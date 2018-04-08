@@ -88,6 +88,9 @@ function set_matrix_cell(row_,column_,price_,count_,count2_,type){
 			var div=document.getElementById("one_input_id"+row_+"_"+column_);
 			matrix[row_][column_].price=+ (div.value===""?null:div.value);
 		}
+		else{
+			matrix[row_][column_].price=+price_;
+		}
 	//TODO
 	matrix[row_][column_].count=+count_;
 	matrix[row_][column_].count2=+count2_;
@@ -117,7 +120,7 @@ case 3:
 				matrix_b_row[column_]=+div.value;
 			}
 			else{
-				matrix_b_row[column_]=+price;
+				matrix_b_row[column_]=+price_;
 			}
 
 
@@ -131,7 +134,7 @@ case 3:
 			}
 			else{
 				
-				matrix_b_column[row_]==+price;
+				matrix_b_column[row_]==+price_;
 			}
 			
 		}
@@ -155,9 +158,9 @@ function read_matrix_cell(row_,column_,type){
 
 // по аналогии абратно
 div=document.getElementById("one_output_1_id"+row_+"_"+column_);
-div.value=matrix[row_][column_].count;
+div.innerHTML=matrix[row_][column_].count;
 div=document.getElementById("one_output_2_id"+row_+"_"+column_);
-div.value=matrix[row_][column_].count2;
+div.innerHTML=matrix[row_][column_].count2;
 
 break;
 case 2:
@@ -413,27 +416,29 @@ function not_full_clear_matrix(){//full
 		for(var i2=0;i2<column;++i2){
 		//TODO заполнять и остальные поля
 		//var tmp;
-		if(full)
+		//if(full)
 //tmp_price=null;
 //else
 var tmp_price=matrix[i][i2].price;
-set_matrix_cell(i,i2,tmp_price,null,null);
+set_matrix_cell(i,i2,tmp_price,null,null,1);
+read_matrix_cell(i,i2,1);
 if(i===0){
 
 	set_matrix_cell(null,i2,0,null,null,3);
-
+	read_matrix_cell(null,i2,3);
 }
 
 }
 
 set_matrix_cell(i,null,0,null,null,3);
+read_matrix_cell(i,null,3);
 }
 }
 //functions подсчета северозаподного угла
 function deg(){
 	
-	var mass_row=matrix_a_row.slice(0,matrix_a_row.length-1);
-	var mass_column=matrix_a_column.slice(0,matrix_a_column.length-1);
+	var mass_row=matrix_a_row.slice(0,matrix_a_row.length);
+	var mass_column=matrix_a_column.slice(0,matrix_a_column.length);
 	var i2=0;
 	var tmp=0;
 	not_full_clear_matrix();//false
@@ -448,10 +453,10 @@ function deg(){
 				else{
 					tmp=mass_row[i];
 				}
-				mass_row[i]-=-tmp;
+				mass_row[i]-=tmp;
 				mass_column[i2]-=tmp;
-				matrix[i][i2].count=tmp;
-				set_matrix_cell(i,i2,matrix[i][i2].price,tmp,null);
+				//matrix[i][i2].count=tmp;
+				set_matrix_cell(i,i2,matrix[i][i2].price,tmp,null,1);
 				if(mass_row[i]!=0){
 					i2++;
 				}
@@ -463,21 +468,24 @@ function deg(){
 
 	//}
 }
+load_matr();
 }
 
 
 //метод наименьшей стоимости
 function small_price(){
-	var mass_row=matrix_a_row.slice(0,matrix_a_row.length-1);
-	var mass_column=matrix_a_column.slice(0,matrix_a_column.length-1);
+	var mass_row=matrix_a_row.slice(0,matrix_a_row.length);
+	var mass_column=matrix_a_column.slice(0,matrix_a_column.length);
 	var mass_price_=[];
 	var mass_price=[];
+	not_full_clear_matrix();
 	for(var i=0;i<row;++i){
 		for(var i2=0;i2<column;++i2){
 
-			mass_price_.push(matrix[i][i2]);
+			mass_price_.push(matrix[i][i2].price);
 		}
 	}
+	/*
 	for(var i=0;i<mass_price_.length-1;++i){
 		if(mass_price_.count(mass_price_[i])>1){
 //mass_price.splice(i,1);
@@ -489,12 +497,22 @@ else{
 	mass_price.push(mass_price_[i]);
 }
 
-}
-mass_price.sort((a, b) =>{
+}*/
+mass_price_.sort((a, b) =>{
 	if (a > b) return 1;
 	if (a < b) return -1;
 });
 
+for(var i=0;i<mass_price_.length;++i){
+	if(i+1<mass_price_.length){
+		if(mass_price_[i]!==mass_price_[i+1])
+		mass_price.push(mass_price_[i])
+	}
+	else{
+if(mass_price[mass_price.length-1]!==mass_price_[i])
+	mass_price.push(mass_price_[i])
+	}
+}
 
 for(var item=0;item<mass_price.length;++item){
 	for(var i=0;i<row;++i){
@@ -502,16 +520,16 @@ for(var item=0;item<mass_price.length;++item){
 			if(matrix[i][i2].price===mass_price[item]){
 //TODO
 var tmp=0;
-if(mass_row[i]!==0&&mass_column[i2]!==0)
-	if(mass_row[i]>mass_column[i2]){
-		tmp=mass_column[i2];
+if(mass_row[i2]!==0&&mass_column[i]!==0)
+	if(mass_row[i2]>mass_column[i]){
+		tmp=mass_column[i];
 
 	}
 	else{
-		tmp=mass_row[i];
+		tmp=mass_row[i2];
 	}
-	mass_row[i]-=-tmp;
-	mass_column[i2]-=tmp;
+	mass_row[i2]-=tmp;
+	mass_column[i]-=tmp;
 	matrix[i][i2].count=tmp;
 }
 
@@ -522,7 +540,7 @@ if(mass_row[i]!==0&&mass_column[i2]!==0)
 }
 }
 
-
+load_matr();
 
 }
 
