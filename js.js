@@ -8,6 +8,8 @@
 //1--обычная ячейка  2--А Б(путь и тд по краям уровень 1)   3-- потенциалы
 //200 строка остановился
 //
+
+//ВЫВОДИТЬ Z
 var column=0;//4
 var row=4;
 
@@ -44,7 +46,7 @@ function page_start(){
 	reload_ui(false);
 	load_matr();
 }
-//создание пустой схемы uiпо размерам()
+//создание пустой схемы ui по размерам() при ui=false стирает матрицу и создает заного пустую(только центральную матрицу)
 function reload_ui(UI){
 	var div=document.getElementById("main_div_tabl");
 	document.getElementById("a_column_id").innerHTML="";
@@ -441,6 +443,7 @@ function deg(){
 	var mass_column=matrix_a_column.slice(0,matrix_a_column.length);
 	var i2=0;
 	var tmp=0;
+	reload_ui(true);
 	not_full_clear_matrix();//false
 	for(var i=0;i<column;++i){
 		
@@ -478,6 +481,7 @@ function small_price(){
 	var mass_column=matrix_a_column.slice(0,matrix_a_column.length);
 	var mass_price_=[];
 	var mass_price=[];
+	reload_ui(true);
 	not_full_clear_matrix();
 	for(var i=0;i<row;++i){
 		for(var i2=0;i2<column;++i2){
@@ -506,11 +510,11 @@ mass_price_.sort((a, b) =>{
 for(var i=0;i<mass_price_.length;++i){
 	if(i+1<mass_price_.length){
 		if(mass_price_[i]!==mass_price_[i+1])
-		mass_price.push(mass_price_[i])
+			mass_price.push(mass_price_[i])
 	}
 	else{
-if(mass_price[mass_price.length-1]!==mass_price_[i])
-	mass_price.push(mass_price_[i])
+		if(mass_price[mass_price.length-1]!==mass_price_[i])
+			mass_price.push(mass_price_[i])
 	}
 }
 
@@ -544,6 +548,67 @@ load_matr();
 
 }
 
+
+
+//метод потенциалов
+function meth_pot(){
+
+	not_full_clear_matrix();
+	reload_ui(true);
+	small_price();
+	var na4_col=0;
+	var na4_row=0;
+	var not_good_method=false;
+//var first_pot=Math.floor(matrix[0][0].price/2);
+
+ck:
+for(var i=0;i<row;++i){
+	for(var i2=0;i2<column;++i2){
+		if(matrix[i][i2].count!=0){//||matrix[i][i2].count==null
+			na4_row=i;
+			na4_col=i2;
+			break ck;
+		}
+
+	}
+
+}
+
+matrix_b_row[na4_col]=Math.floor(matrix[na4_row][na4_col].price/2);
+//matrix_b_column[0]=first_pot;
+//matrix_b_row[0]=first_pot;
+//if(first_pot*2!==matrix[0][0].price)
+//matrix_b_row[0]++;
+
+//ТУТ ХЗ возможно надо идти только по пустым
+for(var i=0;i<row;++i){
+	matrix_b_column[i]=matrix[i][na4_col].price-matrix_b_row[na4_col];
+}
+for(var i=0;i<column;++i){
+	matrix_b_row[i]=matrix[na4_row][i].price-matrix_b_column[0];	
+}
+
+for(var i=0;i<row;++i){
+	for(var i2=0;i2<column;++i2){
+		if(matrix[i][i2].count==0||matrix[i][i2].count==null){
+			matrix[i][i2].count2=+matrix_b_row[i2]+ +matrix_b_column[i];
+			if(!(matrix[i][i2].price-matrix[i][i2].count2>0)){
+				var div=document.getElementById("input_block_id"+i+"_"+i2)
+	//input_block_id0_0
+	div.style="background-color:blue;"
+	not_good_method=true;
+}
+}
+
+}
+
+}
+load_matr();
+if(not_good_method){
+	alert("план не является оптимальным");
+}
+
+}
 
 
 
