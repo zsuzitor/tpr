@@ -62,10 +62,7 @@ div.one_input_div{
 	
 }
 .hr_rotate{
-    /*TODO transform*/
-    /*transform:rotate(90deg);*/
-    /*position: absolute;*/
-    /*TODO сейчас при увеличении не будет меняться*/
+
     height:  300px;
 }
 div.main_div{
