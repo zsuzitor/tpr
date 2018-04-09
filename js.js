@@ -32,9 +32,16 @@ class one_block_matrix {
 		this.price=price_;
 		this.count=count_;
 		this.count2=count_2;
+// this.Copy=()=>{
 
-	}
+// return new one_block_matrix(this.price,this.count,this.count2);
 
+// }
+}
+
+Copy(){
+	return new one_block_matrix(this.price,this.count,this.count2);
+}
 
 }
 
@@ -602,6 +609,8 @@ for(var i=0;i<row;++i){
 load_matr();
 if(not_good_method){
 	alert("план не является оптимальным");
+	var z_output=document.getElementById("z_result_id");
+	z_output.innerHTML="";
 }
 else{
 	var z_output=document.getElementById("z_result_id");
@@ -641,25 +650,29 @@ for(var height=1;height<=row;++height) //ширина прямоугольник
 for(var row_=0;row_+height-1<row;++row_) //начало обрабатываемого прямоугольника
 for(var col_=0;col_+width-1<column;++col_){//начало обрабатываемого прямоугольника
 
-	var new_small_matrix=sort_one_rectangle(matrix,row_,col_,width,height);
-	matrix_new[row_][col_]=new_small_matrix[0][0];
-	matrix_new[row_][col_+width-1]=new_small_matrix[0][1];
-	matrix_new[row_+height-1][col_]=new_small_matrix[1][0];
-	matrix_new[row_+height-1][col_+width-1]=new_small_matrix[1][1];
-	var new_z=Z_matr(matrix_new);
-	if(z_matrix_baz>new_z){
-		z_matrix_baz=new_z;
-		matrix[row_][col_]=new_small_matrix[0][0];
-		matrix[row_][col_+width-1]=new_small_matrix[0][1];
-		matrix[row_+height-1][col_]=new_small_matrix[1][0];
-		matrix[row_+height-1][col_+width-1]=new_small_matrix[1][1];
+	if(height!==1&&width!==1){
+		var new_small_matrix=sort_one_rectangle(matrix,row_,col_,width,height);
 
-		break sk;
+		matrix_new[row_][col_]=new_small_matrix[0][0];
+		matrix_new[row_][col_+width-1]=new_small_matrix[0][1];
+		matrix_new[row_+height-1][col_]=new_small_matrix[1][0];
+		matrix_new[row_+height-1][col_+width-1]=new_small_matrix[1][1];
+		var new_z=Z_matr(matrix_new);
+		if(z_matrix_baz>new_z){
+			z_matrix_baz=new_z;
+			matrix[row_][col_]=new_small_matrix[0][0];
+			matrix[row_][col_+width-1]=new_small_matrix[0][1];
+			matrix[row_+height-1][col_]=new_small_matrix[1][0];
+			matrix[row_+height-1][col_+width-1]=new_small_matrix[1][1];
+
+			break sk;
+		}
 	}
+	
 }
 
-
-end=true;
+if(width>column)
+	end=true;
 
 
 
@@ -670,47 +683,69 @@ var z_output=document.getElementById("z_result_id");
 z_output.innerHTML="Z="+Z_matr(matrix);
 }
 
+
+
+
+function new_matr(matrix){
+	var res=[];
+	for(var i=0;i<matrix.length;++i){
+		if(res[i]==undefined)
+			res[i]=[];
+		for(var i2=0;i2<matrix[i].length;++i2)
+			res[i][i2]=matrix[i][i2].Copy();
+	}
+	return res;
+
+}
+
+
 function sort_one_rectangle(matrix,row_,col_,width,height){
 	//var all_count=matrix[row_][col_].count+matrix[row_][width-1].count+matrix[height-1][col_].count+matrix[height-1][width-1].count;
 
 
-var matr=[];
-for(var i=0;i<(height==1?2:height);++i){
 
-	matr[i]=[];
+	if(height==1&&width==1)
+		return null;
 
-}
 
-matr[0].push(matrix[row_][col_])
-if(col_!==col_+width-1)
-	matr[0].push(matrix[row_][col_+width-1]);
-else
-	matr[0].push(new one_block_matrix(0,0,0));
-if(row_!==row_+height-1)
-	matr[1].push(matrix[row_+height-1][col_]);
-else
-	matr[1].push(new one_block_matrix(0,0,0));
+
+	var matr=[];
+	for(var i=0;i<2;++i){
+
+		matr[i]=[];
+
+	}
+
+	matr[0].push(matrix[row_][col_].Copy())
+	if(col_!==col_+width-1)
+		matr[0].push(matrix[row_][col_+width-1].Copy());
+	else
+		matr[0].push(new one_block_matrix(0,0,0));
+	if(row_!==row_+height-1)
+		matr[1].push(matrix[row_+height-1][col_].Copy());
+	else
+		matr[1].push(new one_block_matrix(0,0,0));
 
 	if(row_!==row_+height-1&&col_!==col_+width-1)
-		matr[1].push(matrix[row_+height-1][col_+width-1]);
+		matr[1].push(matrix[row_+height-1][col_+width-1].Copy());
 	else
 		matr[1].push(new one_block_matrix(0,0,0));
 
 	var all_count=matr[0][0].count+matr[0][1].count+matr[1][0].count+matr[1][1].count;
 	//=matr[0][0].price*matr[0][0].count+matr[0][1].price*matr[0][1].count+matr[1][0].price*matr[1][0].count+matr[1][1].price*matr[1][1].count;
+
+
 	if(all_count>0){
 //
 
 
-
-
-matr_tmp=matr.slice();
+matr_tmp=new_matr(matr);
 /*
 var mass_price=mass_price_matrix(matr,2,2);
 //в квадрате смещать или горизонтально или вертикально параллельно
 */
 var z_not_changed=Z_matr(matr);
-var z_standart=Z_matr(matr);
+var z_standart=z_not_changed;
 var z_change;
 
 
@@ -726,77 +761,137 @@ var z_change;
 
 //перемещаем вверх по левой строке
 
-var change=min_num(matr[0][0].count+matr[1][0].count,matrix_a_row[col_],matrix_a_column[row_],
-	matr[0][1].count+matr[1][1].count);//,matrix_a_row[width-1],matrix_a_column[height-1]);
-var count_matr_0_0=matr[0][0].count;
-matr_tmp[0][0].count=change;
-matr_tmp[1][0].count-=count_matr_0_0-change;
-matr_tmp[1][1].count=change;
-matr_tmp[0][1].count-=count_matr_0_0-change;
+
+
+
+// var change=min_num(matr[0][0].count+matr[1][0].count,matrix_a_row[col_],matrix_a_column[row_],
+// 	matr[0][1].count+matr[1][1].count);//,matrix_a_row[width-1],matrix_a_column[height-1]);
+var pot_1=min_num(matrix_a_row[col_],matrix_a_column[row_]);
+var pot_2=min_num(matrix_a_row[col_+width-1],matrix_a_column[row_+height-1]);
+if(matr[0][0].count<pot_1&&matr[1][1].count<pot_2){
+	var can_change_1=pot_1-matr[0][0].count;//скоолько влезет в ячейку в которую хотим переместить
+	var can_change_2=pot_2-matr[1][1].count;
+	var can_change=min_num(can_change_1,can_change_2,matr[1][0].count,matr[0][1].count);
+	
+	if(can_change>0){
+		matr_tmp[0][0].count+=can_change;
+		matr_tmp[1][1].count+=can_change;
+		matr_tmp[0][1].count-=can_change;
+		matr_tmp[1][0].count-=can_change;
+	}
+}
 
 z_change=Z_matr(matr_tmp);
 if(z_standart>z_change){
 	z_standart=z_change;
 	z_change=null;
-	matr=matr_tmp.slice();
+	matr=new_matr(matr_tmp);
 }
 else
-	matr_tmp=matr.slice();
+	matr_tmp=new_matr(matr);
 
 //перемещаем вниз по левой строке
-change=min_num(matr[0][0].count+matr[1][0].count,matrix_a_row[col_],matrix_a_column[row_+height-1],
-	matr[0][1].count+matr[1][1].count);//,matrix_a_row[width-1],matrix_a_column[height-1]);
-count_matr_0_0=matr[1][1].count;
-matr_tmp[0][1].count=change;
-matr_tmp[0][0].count-=count_matr_0_0-change;
-matr_tmp[1][0].count=change;
-matr_tmp[1][1].count-=count_matr_0_0-change;
 
-z_change=Z_matr(matr_tmp);
-if(z_standart>z_change){
-	z_standart=z_change;
-	z_change=null;
-	matr=matr_tmp.slice();
-}
-else
-	matr_tmp=matr.slice();
+ pot_1=min_num(matrix_a_row[col_+width-1],matrix_a_column[row_]);//в которую перевозим
+ pot_2=min_num(matrix_a_row[col_],matrix_a_column[row_+height-1]);//в которой перевозим
+ if(matr[0][1].count<pot_1&&matr[1][0].count<pot_2){
+	 can_change_1=pot_1-matr[0][1].count;//скоолько влезет в ячейку в которую хотим переместить
+	 can_change_2=pot_2-matr[1][0].count;
+	 can_change=min_num(can_change_1,can_change_2,matr[0][0].count,matr[1][1].count);
+
+	 if(can_change>0){
+	 	matr_tmp[1][0].count+=can_change;
+	 	matr_tmp[0][1].count+=can_change;
+	 	matr_tmp[1][1].count-=can_change;
+	 	matr_tmp[0][0].count-=can_change;
+	 }
+	}
+
+	z_change=Z_matr(matr_tmp);
+	if(z_standart>z_change){
+		z_standart=z_change;
+		z_change=null;
+		matr=new_matr(matr_tmp);
+	}
+	else
+		matr_tmp=new_matr(matr);
+	// 	matr=matr_tmp.slice();
+	// }
+	// else
+	// 	matr_tmp=matr.slice();
+
+
+
 
 //перемещаем вправо по верхней строке
-change=min_num(matr[0][0].count+matr[0][1].count,matrix_a_row[col_+width-1],matrix_a_column[row_],
-	matr[1][0].count+matr[1][1].count);//,matrix_a_row[width-1],matrix_a_column[height-1]);
-count_matr_0_0=matr[0][1].count;
-matr_tmp[0][1].count=change;
-matr_tmp[0][0].count-=count_matr_0_0-change;
-matr_tmp[1][0].count=change;
-matr_tmp[1][1].count-=count_matr_0_0-change;
 
-z_change=Z_matr(matr_tmp);
-if(z_standart>z_change){
-	z_standart=z_change;
-	z_change=null;
-	matr=matr_tmp.slice();
-}
-else
-	matr_tmp=matr.slice();
+ pot_1=min_num(matrix_a_row[col_+width-1],matrix_a_column[row_]);//в которую перевозим
+ pot_2=min_num(matrix_a_row[col_],matrix_a_column[row_+height-1]);//в которой перевозим
+ if(matr[0][1].count<pot_1&&matr[1][0].count<pot_2){
+	 can_change_1=pot_1-matr[0][1].count;//скоолько влезет в ячейку в которую хотим переместить
+	 can_change_2=pot_2-matr[1][0].count;
+	 can_change=min_num(can_change_1,can_change_2,matr[1][1].count,matr[0][0].count);
+
+	 if(can_change>0){
+	 	matr_tmp[1][0].count+=can_change;
+	 	matr_tmp[0][1].count+=can_change;
+	 	matr_tmp[1][1].count-=can_change;
+	 	matr_tmp[0][0].count-=can_change;
+	 }
+	}
+
+	z_change=Z_matr(matr_tmp);
+	if(z_standart>z_change){
+		z_standart=z_change;
+		z_change=null;
+		matr=new_matr(matr_tmp);
+	}
+	else
+		matr_tmp=new_matr(matr);
+	// 	matr=matr_tmp.slice();
+	// }
+	// else
+	// 	matr_tmp=matr.slice();
+
+
+
+
 
 //перемещаем влево по верхней строке
-change=min_num(matr[0][0].count+matr[0][1].count,matrix_a_row[col_+width-1],matrix_a_column[row_+height-1],
-	matr[1][0].count+matr[1][1].count);
 
-count_matr_0_0=matr[1][1].count;
-matr_tmp[0][0].count=change;
-matr_tmp[0][1].count-=count_matr_0_0-change;
-matr_tmp[1][1].count=change;
-matr_tmp[1][0].count-=count_matr_0_0-change;
+ pot_1=min_num(matrix_a_row[col_],matrix_a_column[row_]);//в которую перевозим
+ pot_2=min_num(matrix_a_row[col_+width-1],matrix_a_column[row_+height-1]);//в которой перевозим
+ if(matr[0][0].count<pot_1&&matr[1][1].count<pot_2){
+	 can_change_1=pot_1-matr[0][0].count;//скоолько влезет в ячейку в которую хотим переместить
+	 can_change_2=pot_2-matr[1][1].count;
+	 can_change=min_num(can_change_1,can_change_2,matr[1][0].count,matr[0][1].count);
 
-z_change=Z_matr(matr_tmp);
-if(z_standart>z_change){
-	z_standart=z_change;
-	z_change=null;
-	matr=matr_tmp.slice();
-}
-else
-	matr_tmp=matr.slice();
+	 if(can_change>0){
+	 	matr_tmp[0][0].count+=can_change;
+	 	matr_tmp[1][1].count+=can_change;
+	 	matr_tmp[0][1].count-=can_change;
+	 	matr_tmp[0][1].count-=can_change;
+	 }
+	}
+
+	z_change=Z_matr(matr_tmp);
+	if(z_standart>z_change){
+		z_standart=z_change;
+		z_change=null;
+		matr=new_matr(matr_tmp);
+	}
+	else
+		matr_tmp=new_matr(matr);
+	// 	matr=matr_tmp.slice();
+	// }
+	// else
+	// 	matr_tmp=matr.slice();
+
+
+
+
+
+
 
 //рекурсию
 if(z_not_changed==z_standart)
@@ -808,6 +903,7 @@ else
 //matrix[row_][col_]
 //return null;
 }
+return matr;
 }
 
 
