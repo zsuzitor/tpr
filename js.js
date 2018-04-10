@@ -639,7 +639,7 @@ function while_method(){
 
 	var end=false;
 	//var matrix_old=matrix.slice();
-	var matrix_new=matrix.slice();
+	
 	var z_matrix_baz=Z_matr(matrix);
 	while(!end){
 		//var width=2;
@@ -651,8 +651,9 @@ for(var row_=0;row_+height-1<row;++row_) //начало обрабатываем
 for(var col_=0;col_+width-1<column;++col_){//начало обрабатываемого прямоугольника
 
 	if(height!==1&&width!==1){
+		
 		var new_small_matrix=sort_one_rectangle(matrix,row_,col_,width,height);
-
+var matrix_new=new_matr(matrix);
 		matrix_new[row_][col_]=new_small_matrix[0][0];
 		matrix_new[row_][col_+width-1]=new_small_matrix[0][1];
 		matrix_new[row_+height-1][col_]=new_small_matrix[1][0];
@@ -671,7 +672,7 @@ for(var col_=0;col_+width-1<column;++col_){//начало обрабатывае
 	
 }
 
-if(width>column)
+if(width>column&&height>row)
 	end=true;
 
 
@@ -761,7 +762,11 @@ var z_change;
 
 //перемещаем вверх по левой строке
 
+if(width==5&&height==3&&row_==1&&col_==0){
 
+			var a;
+			a++;
+		}
 
 
 // var change=min_num(matr[0][0].count+matr[1][0].count,matrix_a_row[col_],matrix_a_column[row_],
@@ -870,7 +875,7 @@ else
 	 	matr_tmp[0][0].count+=can_change;
 	 	matr_tmp[1][1].count+=can_change;
 	 	matr_tmp[0][1].count-=can_change;
-	 	matr_tmp[0][1].count-=can_change;
+	 	matr_tmp[1][0].count-=can_change;
 	 }
 	}
 
