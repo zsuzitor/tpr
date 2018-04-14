@@ -350,22 +350,17 @@ function add_row(){
 function not_full_clear_matrix(){//full
 	for(var i=0;i<row;++i){
 		for(var i2=0;i2<column;++i2){
-		//TODO заполнять и остальные поля
-		//var tmp;
-		//if(full)
-//tmp_price=null;
-//else
-var tmp_price=matrix[i][i2].price;
-set_matrix_cell(i,i2,tmp_price,null,null,1);
-read_matrix_cell(i,i2,1);
-if(i===0){
-	set_matrix_cell(null,i2,0,null,null,3);
-	read_matrix_cell(null,i2,3);
-}
-}
-set_matrix_cell(i,null,0,null,null,3);
-read_matrix_cell(i,null,3);
-}
+			var tmp_price=matrix[i][i2].price;
+			set_matrix_cell(i,i2,tmp_price,null,null,1);
+			read_matrix_cell(i,i2,1);
+			if(i===0){
+				set_matrix_cell(null,i2,0,null,null,3);
+				read_matrix_cell(null,i2,3);
+			}
+		}
+		set_matrix_cell(i,null,0,null,null,3);
+		read_matrix_cell(i,null,3);
+	}
 }
 //functions подсчета северозаподного угла
 function deg(){
@@ -464,9 +459,9 @@ function small_price(){
 //метод потенциалов
 function meth_pot(){
 
-	not_full_clear_matrix();
+	//not_full_clear_matrix();
 	reload_ui(true);
-	small_price();
+	
 	var na4_col=0;
 	var na4_row=0;
 	var not_good_method=false;
@@ -483,47 +478,66 @@ function meth_pot(){
 		}
 
 	}
+	for(var i=0;i<row;++i){
+		matrix_b_column[i]=null;
+	}
+	for(var i=0;i<column;++i){
+		matrix_b_row[i]=null;
+	}
+	matrix_b_column[na4_row]=0;
+	matrix_b_row[na4_col]=matrix[na4_row][na4_col].price;
 
-	matrix_b_row[na4_col]=Math.floor(matrix[na4_row][na4_col].price/2);
+	for(var i=0;i<row;++i){
+		if(matrix[i][na4_col].count>0)
+			matrix_b_column[i]=matrix[i][na4_col].price-matrix_b_row[na4_col];
+	}
+	var end=false;
 
-//ТУТ ХЗ возможно надо идти только по пустым
-for(var i=0;i<row;++i){
-	matrix_b_column[i]=matrix[i][na4_col].price-matrix_b_row[na4_col];
-}
-for(var i=0;i<column;++i){
-	matrix_b_row[i]=matrix[na4_row][i].price-matrix_b_column[0];	
-}
-
-for(var i=0;i<row;++i){
-	for(var i2=0;i2<column;++i2){
-		if(matrix[i][i2].count==0||matrix[i][i2].count==null){
-			matrix[i][i2].count2=+matrix_b_row[i2]+ +matrix_b_column[i];
-			if(!(matrix[i][i2].price-matrix[i][i2].count2>0)){
-				var div=document.getElementById("input_block_id"+i+"_"+i2)
-				div.style="background-color:blue;"
-				not_good_method=true;
+	while(!end){
+		for(var i=0;i<row;++i){
+			for(var i2=0;i2<column;++i2){
+				if(matrix[i][i2].count>0){
+					if(matrix_b_column[i]!=null&&matrix_b_row[i2]==null){
+						matrix_b_row[i2]=matrix[i][i2].price-matrix_b_column[i];
+					}
+					else if(matrix_b_column[i]==null&&matrix_b_row[i2]!=null){
+						matrix_b_column[i]=matrix[i][i2].price-matrix_b_row[i2];
+					}
+				}
+				else if(matrix_b_column[i]!=null&&matrix_b_row[i2]!=null){
+					matrix[i][i2].count2=+matrix_b_row[i2]+ +matrix_b_column[i];
+					if(!(matrix[i][i2].price-matrix[i][i2].count2>0)){
+						document.getElementById("input_block_id"+i+"_"+i2).style="background-color:blue;";
+						not_good_method=true;
+					}
+				}
 			}
 		}
+		var tmp=true;
+		for(var i=0;i<column;++i){
+			if(matrix_b_row[i]==null)
+				tmp=false;
+		}
+		for(var i=0;i<row;++i){
+			if(matrix_b_column[i]==null)
+				tmp=false;
+		}
+		if(tmp)
+			end=true;
+	}
+
+	load_matr();
+	if(not_good_method){
+		alert("план не является оптимальным");
+		var z_output=document.getElementById("z_result_id");
+		z_output.innerHTML="";
+	}
+	else{
+		var z_output=document.getElementById("z_result_id");
+		z_output.innerHTML="Z="+Z_matr(matrix);
 	}
 }
-load_matr();
-if(not_good_method){
-	alert("план не является оптимальным");
-	var z_output=document.getElementById("z_result_id");
-	z_output.innerHTML="";
-}
-else{
-	var z_output=document.getElementById("z_result_id");
-	z_output.innerHTML="Z="+Z_matr(matrix);
-}
-}
 
-//--сначала квадраты идут по строке/столбцу
-//потом прямоугольники 2/3 2/4... 3/2 3/3
-//делаем прямоугольник и смещаем по строке и так для каждой строки
-//после того как дошел до конца увеличиваем 1 грань и другую =1 и заного
-//для прямоугольника:
-//отсортировать ячейки по стоимости и распределить груз
 function while_method(){
 
 	not_full_clear_matrix();
@@ -555,7 +569,6 @@ for(var col_=0;col_+width-1<column;++col_){//начало обрабатывае
 			break sk;
 		}
 	}
-	
 }
 
 if(width>column&&height>row)
@@ -577,7 +590,6 @@ function new_matr(matrix){
 			res[i][i2]=matrix[i][i2].Copy();
 	}
 	return res;
-
 }
 
 
@@ -588,7 +600,6 @@ function sort_one_rectangle(matrix,row_,col_,width,height){
 	for(var i=0;i<2;++i){
 		matr[i]=[];
 	}
-
 	matr[0].push(matrix[row_][col_].Copy())
 	if(col_!==col_+width-1)
 		matr[0].push(matrix[row_][col_+width-1].Copy());
@@ -605,9 +616,7 @@ function sort_one_rectangle(matrix,row_,col_,width,height){
 		matr[1].push(new one_block_matrix(0,0,0));
 
 	var all_count=matr[0][0].count+matr[0][1].count+matr[1][0].count+matr[1][1].count;
-
 	if(all_count>0){
-
 		matr_tmp=new_matr(matr);
 		var z_not_changed=Z_matr(matr);
 		var z_standart=z_not_changed;
@@ -692,7 +701,6 @@ if(z_standart>z_change){
 }
 else
 	matr_tmp=new_matr(matr);
-
 
 //перемещаем влево по верхней строке
 
