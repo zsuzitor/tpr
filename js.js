@@ -381,7 +381,7 @@ function deg(){
 			mass_row[i]-=tmp;
 			mass_column[i2]-=tmp;
 				//matrix[i][i2].count=tmp;
-				set_matrix_cell(i,i2,matrix[i][i2].price,tmp,null,1);
+				set_matrix_cell(i2,i,matrix[i2][i].price,tmp,null,1);
 				if(mass_row[i]!=0){
 					i2++;
 				}
@@ -492,7 +492,7 @@ function meth_pot(){
 			matrix_b_column[i]=matrix[i][na4_col].price-matrix_b_row[na4_col];
 	}
 	var end=false;
-
+	var check_end=0;
 	while(!end){
 		for(var i=0;i<row;++i){
 			for(var i2=0;i2<column;++i2){
@@ -522,20 +522,21 @@ function meth_pot(){
 			if(matrix_b_column[i]==null)
 				tmp=false;
 		}
-		if(tmp)
-			end=true;
+		if(tmp){
+			if(check_end>0)
+				end=true;
+			check_end++;
+			
+		}
 	}
 
 	load_matr();
-	if(not_good_method){
-		alert("план не является оптимальным");
-		var z_output=document.getElementById("z_result_id");
-		z_output.innerHTML="";
-	}
-	else{
-		var z_output=document.getElementById("z_result_id");
+	var z_output=document.getElementById("z_result_id");
 		z_output.innerHTML="Z="+Z_matr(matrix);
-	}
+	if(not_good_method)
+		alert("план не является оптимальным");
+		
+	
 }
 
 function while_method(){
