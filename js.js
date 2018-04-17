@@ -9,7 +9,8 @@ var matrix_b_row=[];//потенциалы
 var matrix_b_column=[];
 //TODO кнопки: очистить
 
-
+var while_bool_=false;//для тех самых "костылей"
+var use_while_bool=true;//для тех самых "костылей"
 
 class one_block_matrix {
 	constructor(price_,count_,count_2){
@@ -17,7 +18,6 @@ class one_block_matrix {
 		this.count=count_;
 		this.count2=count_2;
 	}
-
 	Copy(){
 		return new one_block_matrix(this.price,this.count,this.count2);
 	}
@@ -25,8 +25,6 @@ class one_block_matrix {
 
 //старт страницы и начало работы
 function page_start(){
-
-
 	column=4;
 	reload_ui(false);
 	load_matr();
@@ -43,12 +41,9 @@ function reload_ui(UI){
 	column=0;
 	for(var i=0;i<tmp;++i){
 		add_column_f(UI);
-
 	}
 	for(var i=0;i<row;++i){
-
 		var lvl1=document.getElementById("a_column_id");
-
 		lvl1.innerHTML+=add_one_cell_ui(i,null,2);
 		if(matrix_a_column[i]==undefined)
 			matrix_a_column[i]=0;
@@ -60,10 +55,8 @@ if(matrix_b_column[i]==undefined)
 }
 }
 
-
 //из существующей ячейке значения заносятся в js
 function set_matrix_cell(row_,column_,price_,count_,count2_,type){
-
 	switch(type){
 		case 1:
 		//обычная ячейка
@@ -139,7 +132,6 @@ function read_matrix_cell(row_,column_,type){
 			var div=document.getElementById("one_input_a_col_id"+row_);
 			div.value=matrix_a_column[row_];
 		}
-
 		break;
 		case 3:
 		//потенциалы
@@ -151,7 +143,6 @@ function read_matrix_cell(row_,column_,type){
 			var div=document.getElementById("one_input_b_col_id"+row_);
 			div.value=matrix_b_column[row_];
 		}
-		
 		break;
 		default:
 		alert("Ошибка в свиче 1");
@@ -171,7 +162,6 @@ function save_matr(){
 		set_matrix_cell(i,null,null,null,null,2);
 		set_matrix_cell(i,null,null,null,null,3);
 	}	
-
 }
 //добавление в созданную ячейку значений в ui
 function load_matr(){
@@ -197,15 +187,12 @@ div.innerHTML+=add_one_cell_ui(row,i,1);//"<input class='input_block' id='one_in
 if(matrix[row]==undefined)
 	matrix[row]=[];
 matrix[row][i]=new one_block_matrix(0,null,null);
-
 }
 
 //уровень 1
-
 var lvl1=document.getElementById("a_column_id");
 lvl1.innerHTML+=add_one_cell_ui(row,null,2);
 matrix_a_column[row]=0;
-
 //потенциалы
 var lvl2=document.getElementById("b_column_id");
 lvl2.innerHTML+=add_one_cell_ui(row,null,3);
@@ -238,7 +225,6 @@ function add_one_cell_ui(row_,column_,type){
 			res+="<input  id='one_input_a_col_id"+row_+"' type='number' type='number'>";
 			res+="</div>";
 		}
-		
 		break;
 
 		case 3:
@@ -252,13 +238,11 @@ function add_one_cell_ui(row_,column_,type){
 			res+="<input  id='one_input_b_col_id"+row_+"' type='number' type='number'>";
 			res+="</div>";
 		}
-
 		break;
 		default:
 		alert("Ошибка в свиче 2");
 		break;
 	}
-	
 	return res;
 }
 
@@ -267,7 +251,6 @@ function add_column_f(UI){
 	var res="";
 	var main_div=document.getElementById("main_div_tabl");
 	res+="<div class='div_inline_block div_one_colum' id='one_column_id"+column+"''>";
-
 	for(var i=0;i<row;++i){
 		res+=add_one_cell_ui(i,column,1);
 		if(matrix[i]==undefined)
@@ -275,10 +258,7 @@ function add_column_f(UI){
 		if(!UI){
 			matrix[i][column]=new one_block_matrix(0,null,null);
 		}
-		
 	}
-
-
 	res+="</div>";
 //уровень 1
 
@@ -293,8 +273,6 @@ if(!UI)
 	matrix_b_row[column]=0;
 column++;
 main_div.innerHTML+=res;
-
-
 }
 
 
@@ -302,12 +280,10 @@ main_div.innerHTML+=res;
 function del_row(){
 	row--;
 	for(var i=0;i<column;++i){
-
 		var div=document.getElementById("input_block_id"+row+"_"+i);
 		div.remove();
-		matrix.splice(row,1);
-
 	}
+	matrix.splice(row,1);
 	div=document.getElementById("ui_block_a_col_id"+row);
 	div.remove();
 	matrix_a_column.splice(row,1);
@@ -322,7 +298,6 @@ function del_column(){
 	column--;
 	var div=document.getElementById("one_column_id"+column);
 	div.remove();
-	
 	for(var i=0;i<row;++i){
 		matrix[i].splice(column,1);
 	}
@@ -368,6 +343,7 @@ function deg(){
 	var mass_column=matrix_a_column.slice(0,matrix_a_column.length);
 	var i2=0;
 	var tmp=0;
+	while_bool_=false;
 	reload_ui(true);
 	not_full_clear_matrix();//false
 	for(var i=0;i<column;++i){
@@ -399,7 +375,7 @@ function deg(){
 function small_price(){
 	var mass_row=matrix_a_row.slice(0,matrix_a_row.length);
 	var mass_column=matrix_a_column.slice(0,matrix_a_column.length);
-	
+	while_bool_=false;
 	reload_ui(true);
 	not_full_clear_matrix();
 	var mass_price=mass_price_matrix(matrix,row,column);
@@ -423,7 +399,6 @@ function small_price(){
 				}
 			}
 		}
-
 		load_matr();
 		var z_output=document.getElementById("z_result_id");
 		z_output.innerHTML="Z="+Z_matr(matrix);
@@ -431,17 +406,16 @@ function small_price(){
 	function mass_price_matrix(matrix,row,column){
 		var mass_price_=[];
 		var mass_price=[];
+		while_bool_=false;
 		for(var i=0;i<row;++i){
 			for(var i2=0;i2<column;++i2){
 				mass_price_.push(matrix[i][i2].price);
 			}
 		}
-
 		mass_price_.sort((a, b) =>{
 			if (a > b) return 1;
 			if (a < b) return -1;
 		});
-
 		for(var i=0;i<mass_price_.length;++i){
 			if(i+1<mass_price_.length){
 				if(mass_price_[i]!==mass_price_[i+1])
@@ -458,14 +432,15 @@ function small_price(){
 
 //метод потенциалов
 function meth_pot(){
-
 	//not_full_clear_matrix();
+	if(while_bool_&&use_while_bool){
+alert("план является оптимальным");
+return;
+	}
 	reload_ui(true);
-	
 	var na4_col=0;
 	var na4_row=0;
 	var not_good_method=false;
-
 	ck:
 	for(var i=0;i<row;++i){
 		for(var i2=0;i2<column;++i2){
@@ -474,9 +449,7 @@ function meth_pot(){
 				na4_col=i2;
 				break ck;
 			}
-
 		}
-
 	}
 	for(var i=0;i<row;++i){
 		matrix_b_column[i]=null;
@@ -486,7 +459,6 @@ function meth_pot(){
 	}
 	matrix_b_column[na4_row]=0;
 	matrix_b_row[na4_col]=matrix[na4_row][na4_col].price;
-
 	for(var i=0;i<row;++i){
 		if(matrix[i][na4_col].count>0)
 			matrix_b_column[i]=matrix[i][na4_col].price-matrix_b_row[na4_col];
@@ -526,26 +498,25 @@ function meth_pot(){
 			if(check_end>0)
 				end=true;
 			check_end++;
-			
 		}
 	}
 
 	load_matr();
 	var z_output=document.getElementById("z_result_id");
-		z_output.innerHTML="Z="+Z_matr(matrix);
+	z_output.innerHTML="Z="+Z_matr(matrix);
 	if(not_good_method)
 		alert("план не является оптимальным");
-		
-	
+	else
+		alert("план является оптимальным");
 }
 
 function while_method(){
-
 	not_full_clear_matrix();
 	reload_ui(true);
 	small_price();
 	var end=false;
 	var z_matrix_baz=Z_matr(matrix);
+	while_bool_=true;
 	while(!end){
 		sk:
 for(var width=1;width<=column;++width) //высота прямоугольника
@@ -580,7 +551,6 @@ load_matr();
 var z_output=document.getElementById("z_result_id");
 z_output.innerHTML="Z="+Z_matr(matrix);
 }
-
 
 function new_matr(matrix){
 	var res=[];
@@ -624,14 +594,12 @@ function sort_one_rectangle(matrix,row_,col_,width,height){
 		var z_change;
 
 //перемещаем вверх по левой строке
-
 var pot_1=min_num(matrix_a_row[col_],matrix_a_column[row_]);
 var pot_2=min_num(matrix_a_row[col_+width-1],matrix_a_column[row_+height-1]);
 if(matr[0][0].count<pot_1&&matr[1][1].count<pot_2){
 	var can_change_1=pot_1-matr[0][0].count;
 	var can_change_2=pot_2-matr[1][1].count;
 	var can_change=min_num(can_change_1,can_change_2,matr[1][0].count,matr[0][1].count);
-	
 	if(can_change>0){
 		matr_tmp[0][0].count+=can_change;
 		matr_tmp[1][1].count+=can_change;
@@ -658,7 +626,6 @@ if(matr[0][1].count<pot_1&&matr[1][0].count<pot_2){
 	can_change_1=pot_1-matr[0][1].count;
 	can_change_2=pot_2-matr[1][0].count;
 	can_change=min_num(can_change_1,can_change_2,matr[0][0].count,matr[1][1].count);
-
 	if(can_change>0){
 		matr_tmp[1][0].count+=can_change;
 		matr_tmp[0][1].count+=can_change;
@@ -676,7 +643,6 @@ if(z_standart>z_change){
 else
 	matr_tmp=new_matr(matr);
 
-
 //перемещаем вправо по верхней строке
 
 pot_1=min_num(matrix_a_row[col_+width-1],matrix_a_column[row_]);
@@ -685,7 +651,6 @@ if(matr[0][1].count<pot_1&&matr[1][0].count<pot_2){
 	can_change_1=pot_1-matr[0][1].count;
 	can_change_2=pot_2-matr[1][0].count;
 	can_change=min_num(can_change_1,can_change_2,matr[1][1].count,matr[0][0].count);
-
 	if(can_change>0){
 		matr_tmp[1][0].count+=can_change;
 		matr_tmp[0][1].count+=can_change;
@@ -711,7 +676,6 @@ if(matr[0][0].count<pot_1&&matr[1][1].count<pot_2){
 	can_change_1=pot_1-matr[0][0].count;
 	can_change_2=pot_2-matr[1][1].count;
 	can_change=min_num(can_change_1,can_change_2,matr[1][0].count,matr[0][1].count);
-
 	if(can_change>0){
 		matr_tmp[0][0].count+=can_change;
 		matr_tmp[1][1].count+=can_change;
@@ -728,8 +692,6 @@ if(z_standart>z_change){
 }
 else
 	matr_tmp=new_matr(matr);
-
-
 if(z_not_changed==z_standart)
 	return matr;
 else
@@ -768,8 +730,6 @@ function min_num(){
 	document.addEventListener("DOMContentLoaded", page_start);
 
 
-
-
 	function loadFile(files) {
 		var file = files[0];
 		if(file) {
@@ -785,8 +745,6 @@ function min_num(){
  matrix_a_column=[];
  matrix_b_row=[];//потенциалы
  matrix_b_column=[];
-
-
 
  for(var i=0;i<row;++i){
  	for(var i2=0;i2<column;++i2){
@@ -855,7 +813,6 @@ for(var i=0; i<row; i++) {
 							}
 						}
 						str[str.length-1]="";
-
 				//сохранение файла
 				var pom=document.createElement('a');
 				//alert(str);

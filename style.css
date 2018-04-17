@@ -1,7 +1,6 @@
 input,
 select,
 textarea {
-    /*max-width: 280px;*/
     width:100%;
     height: 100%;
    box-sizing: border-box;
@@ -16,59 +15,41 @@ img {
     width: 100%;
     height: 100%;
 }
-
 li {
     list-style-type: none; /* Убираем маркеры */
 }
-
 ul {
     margin:0;
     margin-left: 0; /* Отступ слева в браузере IE и Opera */
     padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
 }
-
 .div_inline_block {
     display: inline-block;
     vertical-align: top;
 }
-
 div.div_one_colum{
 width:50px;
 margin-left: 3px;
-
 }
-
-
 div.input_block{
 box-sizing: border-box;
 margin-top: 3px;
  border:2px solid black;
  height: 50px;
  width:50px;
-
 }
 .one_output{
 	height: 50%;
 	width: 50%;
-	
 }
 div.one_input_div{
 	height: 50%;
-	
-
-}
-/*TODO убрать или поменять*/
-#main_div_tabl{
-	
 }
 .hr_rotate{
-
     height:  300px;
-}
-div.main_div{
-  
 }
 div.input_block_down{
     margin-left: 3px;
-   
+}.saveFile_b{
+    max-width: 300px;
 }

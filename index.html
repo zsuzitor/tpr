@@ -7,16 +7,14 @@
 	<title>Document</title>
 </head>
 <body>
-	
 	<button onclick="add_row()">добавить строку</button>
-
 	<button onclick="add_column()">добавить столбец</button>
 	<hr>
 	<button onclick="del_row()">удалить строку</button>
 	<button onclick="del_column()">удалить столбец</button>
 	<hr>
 	<input type="file" onchange="loadFile(this.files)" id="file">
-	<input type="button" onclick="saveFile()" value="сохранить в файл">
+	<input type="button" class="saveFile_b" onclick="saveFile()" value="сохранить в файл">
 	<hr>
 <button onclick="deg()">Северо-Западного угла</button>
 <button onclick="small_price()">Наименьшей стоимости</button>
@@ -26,43 +24,17 @@
 	<hr>
 	<div class="main_div">
 		<div class="div_inline_block">
-			
 			<div id="main_div_tabl">
-				
-
-
-
-
 			</div>
 			<hr>
-
 			<div id='a_row_id'></div>
 			<div id='b_row_id'></div>
 		</div>
 		<hr class="div_inline_block hr_rotate">
-
 		<div class="div_inline_block">
 			<div id="a_column_id" class="div_inline_block"></div>
 			<div  id="b_column_id" class="div_inline_block"></div>
 		</div>
 	</div>
-	
-	
 </body>
 </html>
-
-<!-- <div class="div_inline_block div_one_colum">
-	 <input class="input_block" type='text' type='number'>
-	<input class="input_block" type='text' type='number'>
-	<input class="input_block" type='text' type='number'>
-</div>
-<div class="div_inline_block div_one_colum">
-	<input class="input_block" type='text' type='number'>
-	<input class="input_block" type='text' type='number'>
-	<div class="div_one_row"><input class="input_block"  type='text' type='number'></div>
-</div>
-<div class="div_inline_block div_one_colum">
-	<div class="div_one_row"></div>
-	<div class="div_one_row"></div>
-	<div class="div_one_row"></div>
-</div> -->
