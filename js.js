@@ -517,7 +517,12 @@ function while_method(){
 	var end=false;
 	var z_matrix_baz=Z_matr(matrix);
 	while_bool_=true;
+var end_2=false;
+var max_change_z=z_matrix_baz;
+while(!end_2) {
+
 	while(!end){
+		var matrix_check=new_matr(matrix);
 		sk:
 for(var width=1;width<=column;++width) //высота прямоугольника
 for(var height=1;height<=row;++height) //ширина прямоугольника
@@ -531,7 +536,11 @@ for(var col_=0;col_+width-1<column;++col_){//начало обрабатывае
 		matrix_new[row_+height-1][col_]=new_small_matrix[1][0];
 		matrix_new[row_+height-1][col_+width-1]=new_small_matrix[1][1];
 		var new_z=Z_matr(matrix_new);
-		if(z_matrix_baz>new_z){
+		/*if(max_change_z==null){
+			max_change_z=new_z;
+
+
+
 			z_matrix_baz=new_z;
 			matrix[row_][col_]=new_small_matrix[0][0];
 			matrix[row_][col_+width-1]=new_small_matrix[0][1];
@@ -539,12 +548,24 @@ for(var col_=0;col_+width-1<column;++col_){//начало обрабатывае
 			matrix[row_+height-1][col_+width-1]=new_small_matrix[1][1];
 
 			break sk;
-		}
+		}*/
+		
+			if(max_change_z>new_z){
+				matrix_check=new_matr(matrix_new);
+				max_change_z=new_z;
+			}
+		
 	}
 }
 
 if(width>column&&height>row)
 	end=true;
+}
+if(Z_matr(matrix)>Z_matr(matrix_check))
+matrix=new_matr(matrix_check);
+else
+end_2=true;
+//break;
 }
 //row col координаты начала
 load_matr();
